@@ -137,7 +137,7 @@ module.exports = function(options) {
         {
           type: 'input',
           name: 'issues',
-          message: 'Add issue references (e.g. "XNG-123", "DATA-66 DATA-67"):\n',
+          message: 'Add issue references (e.g. "XNG-123", "DATA-66, DATA-67"):\n',
           when: function(answers) {
             return answers.isIssueAffected;
           },
@@ -155,13 +155,15 @@ module.exports = function(options) {
         // parentheses are only needed when a scope is present
         var scope = answers.scope ? '(' + answers.scope + ')' : '';
 
+        var issues = answers.issues ? wrap(answers.issues, wrapOptions) : false;
+
+        var headIssues = issues ? '[' + issues + '] ' : '';
         // Hard limit this line in the validate
-        var head = answers.type + scope + ': ' + answers.subject;
+        var head = answers.type + scope + ': ' + headIssues + answers.subject;
 
         // Wrap these lines at options.maxLineWidth characters
         var body = answers.body ? wrap(answers.body, wrapOptions) : false;
-
-        var issues = answers.issues ? wrap(answers.issues, wrapOptions) : false;
+        
 
         commit(filter([head, body, issues]).join('\n\n'));
       });
