@@ -1,12 +1,12 @@
 'format cjs';
 
 var engine = require('./engine');
-var conventionalCommitTypes = require('conventional-commit-types');
+var commitTypes = require('./commit-types');
 var configLoader = require('commitizen').configLoader;
 
 var config = configLoader.load();
 var options = {
-  types: conventionalCommitTypes.types,
+  types: commitTypes.types,
   defaultType: process.env.CZ_TYPE || config.defaultType,
   defaultScope: process.env.CZ_SCOPE || config.defaultScope,
   defaultSubject: process.env.CZ_SUBJECT || config.defaultSubject,
