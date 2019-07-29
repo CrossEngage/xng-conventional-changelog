@@ -2,7 +2,7 @@
 
 Status:
 [![npm version](https://img.shields.io/npm/v/xng-conventional-changelog.svg?style=flat-square)](https://www.npmjs.org/package/xng-conventional-changelog)
-[![npm downloads](https://img.shields.io/npm/dm/xng-conventional-changelog.svg?style=flat-square)](http://npm-stat.com/charts.html?package=cz-conventional-changelog&from=2019-07-25)
+[![npm downloads](https://img.shields.io/npm/dm/xng-conventional-changelog.svg?style=flat-square)](http://npm-stat.com/charts.html?package=xng-conventional-changelog&from=2019-07-25)
 
 Customized fork of [cz-conventional-changelog](https://github.com/CrossEngage/cz-conventional-changelog). Prompts for [conventional changelog](https://github.com/conventional-changelog/conventional-changelog) standard.
 
