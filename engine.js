@@ -87,6 +87,21 @@ module.exports = function(options) {
           }
         },
         {
+          type: 'confirm',
+          name: 'isIssueAffected',
+          message: 'Does this change affect any open issues?',
+          default: options.defaultIssues ? true : false
+        },
+        {
+          type: 'input',
+          name: 'issues',
+          message: 'Add issue references (e.g. "XNG-123", "DATA-66, DATA-67"):\n',
+          when: function(answers) {
+            return answers.isIssueAffected;
+          },
+          default: options.defaultIssues ? options.defaultIssues : undefined
+        },
+        {
           type: 'input',
           name: 'subject',
           message: function(answers) {
@@ -127,21 +142,6 @@ module.exports = function(options) {
           message:
             'Provide a longer description of the change: (press enter to skip)\n',
           default: options.defaultBody
-        },
-        {
-          type: 'confirm',
-          name: 'isIssueAffected',
-          message: 'Does this change affect any open issues?',
-          default: options.defaultIssues ? true : false
-        },
-        {
-          type: 'input',
-          name: 'issues',
-          message: 'Add issue references (e.g. "XNG-123", "DATA-66, DATA-67"):\n',
-          when: function(answers) {
-            return answers.isIssueAffected;
-          },
-          default: options.defaultIssues ? options.defaultIssues : undefined
         }
       ]).then(function(answers) {
         var wrapOptions = {
