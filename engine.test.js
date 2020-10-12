@@ -1,7 +1,13 @@
 var chai = require('chai');
 var chalk = require('chalk');
-var engine = require('./engine');
 var mock = require('mock-require');
+
+mock('child_process', {
+  exec: function(_, callback) {
+    callback(new Error('Im in test error'), null, 'Just ignore it');
+  }
+});
+var engine = require('./engine');
 var semver = require('semver');
 
 var types = require('conventional-commit-types').types;
@@ -37,6 +43,8 @@ var longIssues =
   'b b bb b bb b bb b bb b bb b bb b bb b bb b bb b bb b bb b bb b bb b bb b' +
   'b b bb b bb b bb b bb b bb b bb b bb b bb b bb b bb b bb b bb b bb b bb b bb b bb b bb b bb b' +
   'b b bb b bb b bb b bb b bb b bb b bb b bb b bb b bb b bb b bb b bb b bb b bb b bb b bb b bb b';
+const dummyVersion = 'dummyVersion';
+
 var longIssuesSplit =
   longIssues.slice(0, defaultOptions.maxLineWidth).trim() +
   '\n' +
@@ -104,29 +112,6 @@ describe('commit message', function() {
       })
     ).to.equal(`${type}(${scope}): [${issues}] ${subject}\n\n${body}\n\n${issues}`);
   });
-  xit('header, body and long issues w/ out scope', function() {
-    expect(
-      commitMessage({
-        type,
-        subject,
-        body,
-        issues: longIssues
-      })
-    ).to.equal(`${type}: [${longIssues}] ${subject}\n\n${body}\n\n${longIssuesSplit}`);
-  });
-  xit('header, body and long issues w/ scope', function() {
-    expect(
-      commitMessage({
-        type,
-        scope,
-        subject,
-        body,
-        issues: longIssues
-      })
-    ).to.equal(
-      `${type}(${scope}): [${longIssues}] ${subject}\n\n${body}\n\n${longIssuesSplit}`
-    );
-  });
   it('header and long body w/ out scope', function() {
     expect(
       commitMessage({
@@ -169,28 +154,16 @@ describe('commit message', function() {
       `${type}(${scope}): [${issues}] ${subject}\n\n${longBodySplit}\n\n${issues}`
     );
   });
-  xit('header, long body and long issues w/ out scope', function() {
-    expect(
-      commitMessage({
-        type,
-        subject,
-        body: longBody,
-        issues: longIssues
-      })
-    ).to.equal(`${type}: [${longIssues}] ${subject}\n\n${longBodySplit}\n\n${longIssuesSplit}`);
-  });
-  xit('header, long body and long issues w/ scope', function() {
-    expect(
-      commitMessage({
-        type,
-        scope,
-        subject,
-        body: longBody,
-        issues: longIssues
-      })
-    ).to.equal(
-      `${type}(${scope}): [${longIssues}] ${subject}\n\n${longBodySplit}\n\n${longIssuesSplit}`
-    );
+  it('header, long body, version /w out scope', function() {
+    const version = '26.0.0-4553-gd35f0e602';
+    expect(commitMessage({
+      type,
+      scope,
+      subject,
+      body,
+      issues,
+      version
+    })).to.equal(`${type}(${scope}): [${issues}] ${subject}\n\n${body}\n\nVersion: ${version}\n\n${issues}`);
   });
 });
 describe('validation', function() {
