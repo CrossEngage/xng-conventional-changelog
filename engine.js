@@ -5,6 +5,7 @@ var map = require('lodash.map');
 var longest = require('longest');
 var rightPad = require('right-pad');
 var chalk = require('chalk');
+const { exec } = require('child_process');
 
 var filter = function(array) {
   return array.filter(function(x) {
@@ -163,9 +164,21 @@ module.exports = function(options) {
 
         // Wrap these lines at options.maxLineWidth characters
         var body = answers.body ? wrap(answers.body, wrapOptions) : false;
-        
 
-        commit(filter([head, body, issues]).join('\n\n'));
+        if (answers.version) {
+          const version = `Version: ${answers.version}`;
+          commit(filter([head, body, version, issues]).join('\n\n'));
+        } else {
+          exec("git describe", function(err, stdout, stderr) {
+            if (err) {
+              console.error("I'm fucked up! Fix me please :smile:", stderr);
+              commit(filter([head, body, issues]).join('\n\n'))
+              return;
+            }
+            const version = `Version: ${stdout}`;
+            commit(filter([head, body, version, issues]).join('\n\n'));
+          });
+        }
       });
     }
   };
